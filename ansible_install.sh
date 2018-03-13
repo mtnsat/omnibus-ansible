@@ -84,11 +84,11 @@ if [ ! "$(which ansible-playbook)" ]; then
     dpkg_check_lock && apt-cache search ^git$ | grep -q "^git\s" && apt_install git || apt_install git-core
 
     # If python-pip install failed and setuptools exists, try that
-    if [ -z "$(which pip)" ] && [ -z "$(which easy_install)" ]; then
+    if [ -z "$(which pip)" ] && [ -z "$(pip)" ] && [ -z "$(which easy_install)" ]; then
       apt_install python-setuptools
-      easy_install pip
-    elif [ -z "$(which pip)" ] && [ -n "$(which easy_install)" ]; then
-      easy_install pip
+      easy_install --upgrade pip
+    elif [ -z "$(which pip)" ] && [ -z "$(pip)" ] [ -n "$(which easy_install)" ]; then
+      easy_install --upgrade pip
     fi
     # If python-keyczar apt package does not exist, use pip
     [ -z "$( apt-cache search python-keyczar )" ] && sudo pip install python-keyczar
