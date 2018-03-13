@@ -84,10 +84,10 @@ if [ ! "$(which ansible-playbook)" ]; then
     dpkg_check_lock && apt-cache search ^git$ | grep -q "^git\s" && apt_install git || apt_install git-core
 
     # If python-pip install failed and setuptools exists, try that
-    if [ -z "$(which pip)" ] && [ -z "$(pip)" ] && [ -z "$(which easy_install)" ]; then
+    if ( [ -z "$(which pip)" ] || [ -z "$(pip)" ] ) && [ -z "$(which easy_install)" ]; then
       apt_install python-setuptools
       easy_install --upgrade pip
-    elif [ -z "$(which pip)" ] && [ -z "$(pip)" ] [ -n "$(which easy_install)" ]; then
+    elif ( [ -z "$(which pip)" ] || [ -z "$(pip)" ] ) && [ -n "$(which easy_install)" ]; then
       easy_install --upgrade pip
     fi
     # If python-keyczar apt package does not exist, use pip
@@ -107,7 +107,7 @@ if [ ! "$(which ansible-playbook)" ]; then
     zypper --quiet --non-interactive install libffi-devel openssl-devel python-devel perl-Error
     zypper --quiet --non-interactive install git || zypper --quiet --non-interactive install git-core
 
-    # If python-pip install failed and setuptools exists, try that
+    # If python-pip install failed and tools exists, try that
     if [ -z "$(which pip)" ] && [ -z "$(which easy_install)" ]; then
       zypper --quiet --non-interactive install python-setuptools
       easy_install pip
