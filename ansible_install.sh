@@ -85,7 +85,7 @@ if [ ! "$(which ansible-playbook)" ]; then
 
     # If python-pip install failed and setuptools exists, try that
     if [ -z "$(which pip)" ] || [ -z "$(pip)" ] ; then
-      [ -n "$(which easy_install)" ] || apt_install python-setuptools
+      [ -z "$(which easy_install)" ] || apt_install python-setuptools
       echo "Upgrading pip module"
       easy_install --upgrade pip
       pip install -q --upgrade pyopenssl
