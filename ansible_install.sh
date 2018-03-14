@@ -88,7 +88,7 @@ if [ ! "$(which ansible-playbook)" ]; then
       [ -z "$(which easy_install)" ] || apt_install python-setuptools
       echo "Upgrading pip module"
       easy_install --upgrade pip
-      pip install -q --upgrade pyopenssl
+      pip install --upgrade pyopenssl
     fi
     # If python-keyczar apt package does not exist, use pip
     [ -z "$( apt-cache search python-keyczar )" ] && sudo pip install python-keyczar
@@ -133,13 +133,13 @@ if [ ! "$(which ansible-playbook)" ]; then
     echo 'WARN: Not all functionality of ansible may be available'
   fi
 
-  pip install -q --upgrade six
+  pip install --upgrade six
   mkdir -p /etc/ansible/
   printf "%s\n" "[local]" "localhost" > /etc/ansible/hosts
   if [ -z "$ANSIBLE_VERSION" ]; then
-    pip install -q ansible
+    pip install ansible
   else
-    pip install -q ansible=="$ANSIBLE_VERSION"
+    pip install ansible=="$ANSIBLE_VERSION"
   fi
   if [ -f /etc/centos-release ] || [ -f /etc/redhat-release ] || [ -f /etc/oracle-release ] || [ -f /etc/system-release ]; then
     # Fix for pycrypto pip / yum issue
