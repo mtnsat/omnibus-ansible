@@ -85,7 +85,7 @@ if [ ! "$(which ansible-playbook)" ]; then
 
     # If python-pip install failed and setuptools exists, try that
     if [ -z "$(which pip)" ] && [ -z "$(which easy_install)" ]; then
-      yum -y install python-setuptools
+      apt_install python-setuptools
       easy_install pip
     elif [ -z "$(which pip)" ] && [ -n "$(which easy_install)" ]; then
       easy_install pip
