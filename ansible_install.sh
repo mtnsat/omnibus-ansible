@@ -1,6 +1,5 @@
 #!/bin/sh
-
-set -x
+#TODO.md
 
 if [ "$1" = "-v" ]; then
   ANSIBLE_VERSION="${2}"
@@ -85,11 +84,11 @@ if [ ! "$(which ansible-playbook)" ]; then
     dpkg_check_lock && apt-cache search ^git$ | grep -q "^git\s" && apt_install git || apt_install git-core
 
     # If python-pip install failed and setuptools exists, try that
-    if [ -z "$(which pip)" ] || [ -z "$(pip)" ] ; then
-      [ -z "$(which easy_install)" ] || apt_install python-setuptools
-      echo "Upgrading pip module"
-      easy_install --upgrade pip
-      pip install --upgrade pyopenssl
+    if [ -z "$(which pip)" ] && [ -z "$(which easy_install)" ]; then
+      yum -y install python-setuptools
+      easy_install pip
+    elif [ -z "$(which pip)" ] && [ -n "$(which easy_install)" ]; then
+      easy_install pip
     fi
     # If python-keyczar apt package does not exist, use pip
     [ -z "$( apt-cache search python-keyczar )" ] && sudo pip install python-keyczar
@@ -108,7 +107,7 @@ if [ ! "$(which ansible-playbook)" ]; then
     zypper --quiet --non-interactive install libffi-devel openssl-devel python-devel perl-Error
     zypper --quiet --non-interactive install git || zypper --quiet --non-interactive install git-core
 
-    # If python-pip install failed and tools exists, try that
+    # If python-pip install failed and setuptools exists, try that
     if [ -z "$(which pip)" ] && [ -z "$(which easy_install)" ]; then
       zypper --quiet --non-interactive install python-setuptools
       easy_install pip
@@ -134,13 +133,13 @@ if [ ! "$(which ansible-playbook)" ]; then
     echo 'WARN: Not all functionality of ansible may be available'
   fi
 
-  pip install --upgrade six
+  pip install -q six --upgrade
   mkdir -p /etc/ansible/
   printf "%s\n" "[local]" "localhost" > /etc/ansible/hosts
   if [ -z "$ANSIBLE_VERSION" ]; then
-    pip install ansible
+    pip install -q ansible
   else
-    pip install ansible=="$ANSIBLE_VERSION"
+    pip install -q ansible=="$ANSIBLE_VERSION"
   fi
   if [ -f /etc/centos-release ] || [ -f /etc/redhat-release ] || [ -f /etc/oracle-release ] || [ -f /etc/system-release ]; then
     # Fix for pycrypto pip / yum issue
